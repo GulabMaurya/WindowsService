@@ -1,0 +1,374 @@
+﻿@model IEnumerable<WindowsService.Models.Service>
+@{
+    ViewBag.Title = "WindowsServices";
+}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>::Windows Services::</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/assets/images/logo/favicon.png">
+
+
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+
+    <script src="~/Scripts/jquery-3.7.1.js"></script>
+        <script src="~/Scripts/jquery.dataTables.min.js"></script>
+        <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+   
+
+     <script src="~/Scripts/alertify.js"></script>
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/alertifyjs/alertify.min.css" rel="stylesheet" />
+    <link href="~/Content/alertifyjs/themes/default.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/Content/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <style>
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .myTable {
+            border-top: 1px solid black;
+            border-right: 1px solid black;
+            border-bottom: 1px solid black;
+            border-left: 1px solid black;
+            /* Set table layout for fixed width columns */
+            table-layout: auto;
+            width: 100%; /* Adjust width as needed */
+            font-size: small;
+            /*border-spacing: 0;
+            border-collapse: collapse;*/
+        }
+
+            .myTable th {
+                font-weight: bold;
+                text-align: center;
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                border-bottom: 1px solid black;
+                border-left: 1px solid black;
+                padding: 2px 5px; /* Adjust padding values as needed */
+                /* Text wrap within cells */
+                /*  white-space: pre-wrap; */
+                overflow-wrap: break-word;
+            }
+
+            .myTable td {
+                border-top: 1px solid black;
+                border-right: 1px solid black;
+                border-bottom: 1px solid black;
+                border-left: 1px solid black;
+                padding: 0px; /* Adjust padding values as needed */
+                /* Text wrap within cells */
+                /*  white-space: pre-wrap; */
+                overflow-wrap: break-word;
+            }
+
+        .navbar-fixed-top {
+            top: 0;
+            border-width: 0 0 1px;
+        }
+
+        .navbar {
+            position: relative;
+            min-height: 50px;
+            margin-bottom: 0px;
+            border: 1px solid transparent;
+        }
+
+
+        .right-align {
+            margin-right: auto; /* Push the button to the right */
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+        }
+
+            .action-buttons a {
+                margin: 0 5px;
+            }
+    </style>
+
+</head>
+<body>
+    @*<div class="container-fluid p-h-0 p-v-20 bg full-height d-flex login-background">
+        <div class="d-flex flex-column justify-content-between w-100 m-t-10">
+            <div class="container d-flex h-100">
+                <div style="float: left; left: 0; position: absolute; margin-right: 15px;">
+                    <h6 style="display: inline; color: #FFFFFF;">Encrypt/Decrypt Text using AES128 Encryption</h6>
+                    <br>
+                    <a href="@Url.Action("Encrypt_Decrypt","Home")" style="text-decoration: none; color: #FFFFFF; display: inline; margin-left: 10px; ">
+                        <i class="fas fa-hand-point-right"></i> Click Here
+                    </a>
+                    <br>
+                </div>*@
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <ul class="nav navbar-nav">
+                <li style="display: flex; justify-content: center; align-items: center; background-color: #E71A73; color: white; text-decoration: none; border: none; border-radius: 1px; cursor: pointer; margin-top: 1px; margin-bottom: 1px; margin: 1px 5px;">
+                    <a onclick="goBack()" btn="btnBack" style="color: white;">Back To Previous Page</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container body-content">
+        <div class="panel panel-info">
+            <br />
+            <table id="winServiceList" class="myTable" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ServiceName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.DisplayName)
+                        </th>
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.StartName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Status)
+                        </th>
+                        <th>
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ServiceName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DisplayName)
+                            </td>
+                            @*<td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>*@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StartName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td class="action-buttons">
+
+
+                                @if (item.Status == "Stopped")
+                                {
+                                    <button class="btn btn-primary btn-sm" id="StartService" onclick="StartService(this)">Start</button>
+                                        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                    @*<a href="@Url.Action("StartService", "Home", new { serviceName = item.ServiceName })" class="btn btn-primary btn-sm">*@
+                                        @*<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                                        <i class="fa fa-play" aria-hidden="true"></i> Start
+                                    </a>*@
+                                    @*<a href="@Url.Action("RestartService", "Home", new { serviceName = item.ServiceName, timeoutMilliseconds = 0 })" class="btn btn-warning btn-sm">
+                                            <i class="fa fa-sync" aria-hidden="true"></i> Restart
+                                        </a>*@
+                                }
+
+                                @if (item.Status == "Running")
+                                {
+                                    <button class="btn btn-danger btn-sm" id="StopService" onclick="StopService(this)">Stop</button>
+                                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                                    @*<a href="@Url.Action("StopService", "Home" , new { serviceName = item.ServiceName })" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-stop" aria-hidden="true"></i> Stop
+                                    </a>*@
+
+                                    <button class="btn btn-warning btn-sm" id="RestartService" onclick="RestartService(this)">Restart</button>
+                                        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                    @*<a href="@Url.Action("RestartService", "Home", new { serviceName = item.ServiceName, timeoutMilliseconds = 0 })" class="btn btn-warning btn-sm">
+                                        <i class="fa fa-sync" aria-hidden="true"></i> Restart
+                                    </a>*@
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @*<div style="text-align: center; padding: 15px">
+            <a href="~/Home/" class="btn btn-primary">Back To Home</a>
+
+        </div>*@
+    <footer class="footer">
+        <div class="footer-content">
+
+            <p id="yearfot" class="m-b-0"></p>
+
+        </div>
+    </footer>
+    @*</div>*@
+
+    @*</div>*@
+    @*</div>*@
+    <script>
+   
+
+        var startServiceUrl = '@Url.Action("StartService", "Home")';
+        var stopServiceUrl = '@Url.Action("StopService", "Home")';
+        var restartServiceUrl = '@Url.Action("RestartService", "Home")';
+
+
+        function showSuccessMessage(successMessage) {
+
+
+
+            if (successMessage != '') {
+                alertify.set('notifier', 'position', 'top-right');
+                alertify.success(successMessage);
+            }
+
+
+        }
+
+        function errorMessage(errorMessage) {
+
+            if (errorMessage != '') {
+                alertify.set('notifier', 'position', 'top-right');
+                alertify.error(errorMessage);
+            }
+        }
+        function StartService(button) {
+            console.log(this)
+            var serviceName = button.parentNode.parentNode.querySelector('td:first-child').innerText; // Get the innerText of the first <td> element in the same row
+            console.log("Service Name:", serviceName);
+            //console.log(value)
+            debugger;
+            var dataToSend = {
+                ServiceName: serviceName,
+            };
+
+            $.ajax({
+                url: startServiceUrl,             
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dataToSend),
+                success: function (response) {
+                    if (response.indexOf("successfully") !== -1) {
+
+                        showSuccessMessage(response);
+                    } else {
+                        errorMessage(response);
+
+                    }
+                    setTimeout(function () {
+                        location.reload(); // Refresh the page
+                    }, 2000); // 2000 milliseconds = 2 seconds
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if needed
+                    errorMessage(error);
+                }
+            });
+        }
+
+        function RestartService(button) {
+            console.log(this)
+            var serviceName = button.parentNode.parentNode.querySelector('td:first-child').innerText; // Get the innerText of the first <td> element in the same row
+            console.log("Service Name:", serviceName);
+            //console.log(value)
+            debugger;
+            var dataToSend = {
+                ServiceName: serviceName,
+                timeoutMilliseconds: 60000,
+            };
+
+            $.ajax({
+                url: restartServiceUrl,
+          
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dataToSend),
+                success: function (response) {
+                    // Handle response from server if needed
+                    if (response.indexOf("successfully") !== -1) {
+
+                        showSuccessMessage(response);
+                    } else {
+                        errorMessage(response);
+
+                    }
+                    setTimeout(function () {
+                        location.reload(); // Refresh the page
+                    }, 2000); // 2000 milliseconds = 2 seconds
+
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if needed
+
+                    errorMessage(error);
+                    console.error(error);
+                }
+            });
+        }
+
+
+        function StopService(button) {
+            console.log(this)
+            var serviceName = button.parentNode.parentNode.querySelector('td:first-child').innerText; // Get the innerText of the first <td> element in the same row
+            console.log("Service Name:", serviceName);
+            //console.log(value)
+            debugger;
+            var dataToSend = {
+                ServiceName: serviceName,
+            };
+
+            $.ajax({
+                url: stopServiceUrl,
+               
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dataToSend),
+                success: function (response) {
+                    if (response.indexOf("successfully") !== -1) {
+
+                        showSuccessMessage(response);
+                    } else {
+                        errorMessage(response);
+
+                    }
+                    setTimeout(function () {
+                        location.reload(); // Refresh the page
+                    }, 2000); // 2000 milliseconds = 2 seconds
+                },
+                error: function (xhr, status, error) {
+                    // Handle error if needed
+                    errorMessage(error);
+                }
+            });
+        }
+
+        //$(function () {
+        //    activatejQueryTable();
+        //})
+
+        //function activatejQueryTable() {
+        //    $('#winServiceList').DataTable({
+        //        "columnDefs": [
+        //            { "searchable": false, "orderable": false, "targets": 4 }
+        //        ]
+        //    });
+        //}
+
+     
+       
+
+    </script>
+
+</body>
+</html>
